@@ -46,6 +46,8 @@ Manual_client client =new Manual_client(level,authomatic); // level = [0,23], tr
 
 
 ![](https://media.giphy.com/media/kGKJ3MfP60146yydmY/giphy.gif)
+1.Click on the robot you want to move
+2.Click on the destination vertex
 
 **<h2>To run JUNIT tests, add JUNIT 5 please remove junit 5 from modulePath and add junit 5 to class path. Github do not update this change...
 
