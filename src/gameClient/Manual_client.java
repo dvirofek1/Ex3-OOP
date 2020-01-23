@@ -730,5 +730,9 @@ public class Manual_client implements Runnable {
 		}
 		return time / 100;
 	}
-
+	
+	public int get_gameID()
+	{
+		return this.game_id;
+	}
 }
