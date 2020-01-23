@@ -16,7 +16,7 @@ public class StartClass
 		break;
 		}
 		catch (Exception ex) {
-			System.out.println(ex);
+			
 		}
 	}
 }}

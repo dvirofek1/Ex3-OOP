@@ -1,4 +1,4 @@
-**<h1>Pacman game</h1>**
+**<h1>Ariel OOP - Ex2 The Maze of Waze</h1>**
 ***
 <img src="https://i.imgur.com/nHA5kss.png" alt="Untitled" border="0"/><br /><br/>
 level 23.
@@ -45,15 +45,10 @@ Manual_client client =new Manual_client(level,authomatic); // level = [0,23], tr
 **<h3>How to play manual</h3>**
 
 
-[![Click here to see the video](http://img.youtube.com/vi/v=HBQX07BRlMg/0.jpg)](http://www.youtube.com/watch?v=HBQX07BRlMg)
+![](https://media.giphy.com/media/kGKJ3MfP60146yydmY/giphy.gif)
 
+**<h2>To run JUNIT tests, add JUNIT 5 please remove junit 5 from modulePath and add junit 5 to class path. Github do not update this change...
 
-
-**<h3>How to see the data from the DB ?</h3>**
-<hr>
-
-When you complete a stage you will see authomaticly the results from the data base: <br>
-<a href="https://ibb.co/HHg2mzy"><img src="https://i.ibb.co/HHg2mzy/result.png" alt="result" border="0"></a>
 
 <h3>Examples</h3>
 <hr>
@@ -76,4 +71,5 @@ String json = "{"Robot":{"pos":"","value":"","id":"","src":"","dest":"","speed":
 r.initRobot(json);
 ```
 
-
+**KML**
+![](https://media.giphy.com/media/MXdpxEZ5MQehYhi3lj/giphy.gif)
