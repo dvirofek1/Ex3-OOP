@@ -7,9 +7,9 @@ public class UpdateGraphThread implements Runnable
 	graph g;
 	boolean work= true;
 	int premc;
-	MyGameGUI mainWin;
+	GraphicWin mainWin;
 	
-	public UpdateGraphThread(graph g,MyGameGUI mainWin) {
+	public UpdateGraphThread(graph g,GraphicWin mainWin) {
 		super();
 		this.g = g;
 		this.premc = g.getMC();

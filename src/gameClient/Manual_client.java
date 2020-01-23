@@ -12,7 +12,7 @@ import dataStructure.node_data;
 import game_objects.Fruit;
 import game_objects.GameState;
 import game_objects.Robot;
-import utils.MyGameGUI;
+import utils.GraphicWin;
 import utils.Point3D;
 import utils.Range;
 
@@ -36,15 +36,17 @@ public class Manual_client implements Runnable {
 	HashMap<edge_data, Double> score_by_edge;
 	double score;
 	HashMap<edge_data, LinkedList<Fruit>> fruit_by_edge;
-	MyGameGUI win;
+	GraphicWin win;
 	boolean authomatic;
 	graph_algorithms gAlgo;
 	boolean finishInit = false;
-	KML_Logger kml;
+	Logger_KML kml;
 	int robotNum;
 	final int CASES = 24;
 	int[] mod = new int[CASES];
 	int[] allow_moves=new int[CASES];
+
+	
 	
 
 	/**
@@ -55,9 +57,11 @@ public class Manual_client implements Runnable {
 	 */
 
 	public Manual_client(int game_id, boolean authomatic) {
+		//Game_Server.login(209373208);
 		game = Game_Server.getServer(game_id);
 		init_Mod_allow_moves();
 		this.authomatic = authomatic;
+		
 		this.game_id = game_id;
 		graph = new DGraph();
 		robots = new LinkedList<>();
@@ -65,7 +69,7 @@ public class Manual_client implements Runnable {
 		gAlgo = new Graph_Algo();
 		score_by_edge = new HashMap<edge_data, Double>();
 		fruit_by_edge = new HashMap<>();
-		kml = new KML_Logger(""+game_id);
+		kml = new Logger_KML(""+game_id);
 		init();
 
 	}
@@ -76,56 +80,59 @@ public class Manual_client implements Runnable {
 	 */
 	private void init_Mod_allow_moves() {
 		allow_moves[0] = 290;
-		mod[0] = 2;
+		mod[0] = 30;
 		allow_moves[1] = 580;
-		mod[1] = 2;
+		mod[1] = 9;
 		allow_moves[2] = Integer.MAX_VALUE;
 		mod[2] = 2;
 		allow_moves[3] = 580;
-		mod[3] = 2;
+		mod[3] = 20;
 		allow_moves[4] = Integer.MAX_VALUE;
 		mod[4] = 2;
 		allow_moves[5] = 500;
-		mod[5] = 2;
+		mod[5] = 10;
 		for(int i= 6; i<9;i++)
 		{
 			allow_moves[i] = Integer.MAX_VALUE;
 			mod[i] = 1;
 		}
 		allow_moves[9] = 580;
-		mod[9] = 2;
+		mod[9] = 5;
 		allow_moves[10] = Integer.MAX_VALUE;
 		mod[10] = 2;
 		allow_moves[11] = 580;
-		mod[11] = 2;
+		mod[11] = 10;
 		allow_moves[12] = Integer.MAX_VALUE;
 		mod[12] = 2;
 		allow_moves[13] = 580;
-		mod[13] = 2;
+		mod[13] = 10;
 		allow_moves[14] = Integer.MAX_VALUE;
 		mod[14] = 2;
 		allow_moves[15] = Integer.MAX_VALUE;
 		mod[15] = 2;
 		allow_moves[16] = 290;
-		mod[16] = 2;
+		mod[16] = 10;
 		allow_moves[17] = Integer.MAX_VALUE;
 		mod[17] = 2;
 		allow_moves[18] = Integer.MAX_VALUE;
 		mod[18] = 2;
 		allow_moves[19] = 580;
-		mod[19] = 2;
+		mod[19] = 20;
 		allow_moves[20] = 290;
-		mod[20] = 2;
+		mod[20] = 20;
 		allow_moves[21] = Integer.MAX_VALUE;
 		mod[21] = 2;
 		allow_moves[22] = Integer.MAX_VALUE;
 		mod[22] = 2;
 		allow_moves[23] =1140;
-		mod[23] = 1;
+		mod[23] = 15;
 		
 	}
+	
 
-	public void setGraphicWin(MyGameGUI w) {
+	
+	
+	public void setGraphicWin(GraphicWin w) {
 		this.win = w;
 	}
 
@@ -164,10 +171,30 @@ public class Manual_client implements Runnable {
 		}
 
 		// calculate when put the robots and locate them
+		if(game_id==16)
+		{
+			robots.get(0).setSrc(10);
+			robots.get(1).setSrc(17);
+			game.addRobot(robots.get(0).getSrc());
+			game.addRobot(robots.get(1).getSrc());
+		}
+		else if(game_id==13)
+		{
+			robots.get(0).setSrc(22);
+			robots.get(1).setSrc(16);
+			game.addRobot(robots.get(0).getSrc());
+			game.addRobot(robots.get(1).getSrc());
+		}
+		else if(game_id==9)
+		{
+			robots.get(0).setSrc(9);
+			game.addRobot(robots.get(0).getSrc());
+		}
+		else {
 		for (Robot rob : robots) {
 			setSrcToRobot(rob);
 			game.addRobot(rob.getSrc());
-		}
+		}}
 
 		// init the robots
 		List<String> r = game.getRobots();
@@ -182,7 +209,7 @@ public class Manual_client implements Runnable {
 		}
 
 		// draw gui
-		MyGameGUI win = new MyGameGUI(graph, this);
+		GraphicWin win = new GraphicWin(graph, this);
 		finishInit = true;
 
 	}
@@ -262,8 +289,15 @@ public class Manual_client implements Runnable {
 			Fruit f = new Fruit(null, 0, 0, null);
 			f.setBelong_robot(false);
 			f.initFromString(s);
-			fruits.add(f);
-
+			if(game_id==9 && (game.timeToEnd()/1000)<7 && f.getValue()==14)
+			{
+				System.out.println("ok");
+			}
+			else
+			{
+				f.setBelong_robot(false);
+				fruits.add(f);
+			}
 		}
 		findFruitSource(fruits);
 		update_score_by_edge();
@@ -333,7 +367,7 @@ public class Manual_client implements Runnable {
 
 	}
 
-	public KML_Logger getKML() {
+	public Logger_KML getKML() {
 		return kml;
 	}
 
@@ -446,35 +480,53 @@ public class Manual_client implements Runnable {
 	 * calculate by a formula dependence on distance, and value.
 	 */
 
-	private void setDestToAllRobots() {
+	private boolean setDestToAllRobots() {
+		boolean has_changed = false;
 		LinkedList<Fruit> fruitsAlgo = new LinkedList<>();
 			for (Fruit f : fruits) {
-				fruitsAlgo.add(f);
+			
+					f.setBelong_robot(false);
+					fruitsAlgo.add(f);
 			}
+			
 		
 		fruitsAlgo.sort(new FruitComperator());
-
-
+		
 		for (Robot robot : robots) {
+			if(robot.getDest()==-1)
+				has_changed=true;
+			else
+				continue;
 			boolean found = false; 
 			int j_op_b = 0;
 			Fruit f_op_b = null;
 			double plan_b_max_val = 0;
-			double t_precent = 0.8;
-			double t_score = 0.2;
+			double t_precent = 1; //0.3
+			double t_score = 0; //0.7
 			double sum_value = 0;
 			final double CONSTANT = 60;
-			if(game_id==3 ||game_id==9)
-			{
-				t_score = 0.1;
-				t_precent = 0.9;
-			}
 			List<node_data> optionB = null;
 			int i = 0;
+			if(game_id==16|| game_id==9)
+			{
+				t_precent = 1;
+				t_score=0.0;
+			}
+			if(game_id==13||game_id==20||game_id==23||game_id==9)
+			{
+				t_precent = 0.8;
+				t_score=0.2;
+			}
+			
 			while (!found) {
 				if (i == fruitsAlgo.size())
+				{
+					//1System.out.println("bye");
 					break;
+				}
 				Fruit f = fruitsAlgo.get(i);
+		
+			
 				if (!f.isBelong_robot()) {
 					LinkedList<Integer> vertices = new LinkedList<>();
 					vertices.add(robot.getSrc()); // root->1 before fruit->fruit
@@ -501,6 +553,7 @@ public class Manual_client implements Runnable {
 							f_op_b = f;
 						}
 					}
+					
 				}
 				i++;
 
@@ -509,33 +562,30 @@ public class Manual_client implements Runnable {
 				if (optionB != null) {
 					node_data ver = optionB.get(j_op_b);
 					robot.setDest(ver.getKey());
+
+						//System.out.println(optionB+ " "+j_op_b);
 					f_op_b.setBelong_robot(true);
 					game.chooseNextEdge(robot.getId(), robot.getDest());
+	
+					
 
 					found = true;
 				} else {
-					robot.setDest(-1);
+					if(game_id==19)
+						robot.setDest(robot.getSrc()+1);
+					else
+						robot.setDest(-1);
 					game.chooseNextEdge(robot.getId(), robot.getDest());
+					for (Fruit fruit : fruitsAlgo) {
+						System.out.println(fruit.isBelong_robot());
+					}
+					
+					
 				}
 			}
 		}
+		return has_changed;
 
-	}
-
-	/**
-	 * set the next step to the robot, in my data struct
-	 * 
-	 * @param rob_id
-	 * @param src
-	 */
-
-	public void setRobotNextStep(int rob_id, int src) {
-		for (Robot r : robots) {
-			if (r.getId() == src) {
-				r.setDest(src);
-			}
-			break;
-		}
 	}
 
 	/**
@@ -626,10 +676,24 @@ public class Manual_client implements Runnable {
 	public void run() {
 		int count = 0;
 		int countMove = 0;
-		int sleep = 52;
+		int sleep = 10; //3->5
+
+		if(game_id==0)
+			sleep=3;
+		else if(game_id==9)
+			sleep=20;
+		else if(game_id==13)
+			sleep=10;
+		else if(game_id==3 )
+			sleep=5;
+		else if(game_id==19)
+			sleep = 5;
+		else if(game_id==20)
+			sleep=5;
+		else if(game_id==23)
+			sleep = 4;
 		try {
-			while (finishInit)
-				Thread.sleep(10);
+			
 			game.startGame(); //9  3 16
 			while (game.isRunning()) {
 				if (!authomatic) {
@@ -651,15 +715,16 @@ public class Manual_client implements Runnable {
 					}
 				} else {
 					try {
-					setDestToAllRobots();
+						setDestToAllRobots();
 					
-					if (count % mod[game_id] == 0 ) {
+					if (count % mod[game_id] == 0 && allow_moves[game_id] >countMove) {
 						game.move();
+						
+						update_robot_list();
+						update_fruits_list();
 						countMove++;
 					}
 					count++;
-					update_robot_list();
-					update_fruits_list();
 					String result = game.toString();
 					try {
 						score = readResult(result);
@@ -686,16 +751,20 @@ public class Manual_client implements Runnable {
 			e.printStackTrace();
 			return;
 		}
+		game.stopGame();
+		
 		try {
 			score = readResult(game.toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		System.out.print("Stage: "+game_id+" ");
 		System.out.print("Moves: " + countMove+ " ");
 		System.out.println("Score: "+score);
-		
+		game.sendKML(kml.getKMLStr());
 
 	}
 
@@ -708,6 +777,8 @@ public class Manual_client implements Runnable {
 
 	}
 
+	
+	
 	/**
 	 * return the time for a path (in seconds)
 	 * 
@@ -722,13 +793,19 @@ public class Manual_client implements Runnable {
 		node_data pre = null;
 		for (node_data n : path) {
 			if (i != 0) {
-				double dis = distance(win.scalePoint(pre.getLocation()), win.scalePoint(n.getLocation()));
+				//double dis = distance(win.scalePoint(pre.getLocation()), win.scalePoint(n.getLocation()));
+				double dis = graph.getEdge(pre.getKey(), n.getKey()).getWeight();
 				time += dis / speed;
 			}
 			pre = n;
 			i++;
 		}
 		return time / 100;
+	}
+	
+	public int get_gameID()
+	{
+		return this.game_id;
 	}
 
 }

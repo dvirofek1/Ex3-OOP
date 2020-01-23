@@ -72,6 +72,13 @@ public class Robot
 		this.speed = speed;
 		this.pos = pos;
 		this.value=value;
+		this.belong_fruits=false;
+	}
+	public boolean isBelong_fruits() {
+		return belong_fruits;
+	}
+	public void setBelong_fruits(boolean belong_fruits) {
+		this.belong_fruits = belong_fruits;
 	}
 	int dest;
 	int src;
@@ -79,6 +86,7 @@ public class Robot
 	double speed;
 	Point3D pos;
 	double value;
+	boolean belong_fruits;
 	
 	public void initRobot(String s) throws JSONException {
 		JSONObject robot1 = new JSONObject(s);

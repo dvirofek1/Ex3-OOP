@@ -130,15 +130,20 @@ public class Fruit implements game_obj
 	
 	public int getSrcByType()
 	{
-		if(type == 1)
+		if(type == -1)
 			return edge.getSrc();
 		return edge.getDest();
 	}
 	public int getDestByType()
 	{
-		if(type == 1)
+		if(type == -1)
 			return edge.getDest();
 		return edge.getSrc();
+	}
+	
+	public void setPos(Point3D p)
+	{
+		this.pos=p;
 	}
 	
 	@Override
@@ -152,5 +157,6 @@ public class Fruit implements game_obj
 			return ((Fruit)o).id == id;
 		return false;
 	}
+	
 
 }
